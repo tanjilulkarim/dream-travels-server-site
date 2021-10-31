@@ -19,6 +19,7 @@ app.use(express.json());
 // 75xAxIWlzsdP0stM  user password 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.svxru.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+console.log(uri);
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -26,7 +27,9 @@ async function run() {
     try {
         //connect to database database name and collection name
         await client.connect();
+        console.log('connect to database test');
         const database = client.db('dreamTreavels');
+        console.log('hitted');
         const servicesCollection = database.collection('services');
         //connect to database
 
