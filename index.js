@@ -31,7 +31,47 @@ async function run() {
         const database = client.db('dreamTreavels');
         console.log('hitted');
         const servicesCollection = database.collection('services');
+        // for card 
+        const OrderCollection = database.collection('cardItem');
         //connect to database
+
+
+
+        // post order single offer 
+        // post  api
+        app.post('/carts', async (req, res) => {
+            const event = req.body;
+            const result = await OrderCollection.insertOne(event);
+            res.json(result);
+        })
+
+        // get api for offer all
+        app.get('/carts', async (req, res) => {
+            const cursor = OrderCollection.find({})
+            const item = await cursor.toArray();
+            res.json(item);
+        })
+
+
+        // delete
+        app.delete('/carts/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: id };
+            const singlCart = await OrderCollection.deleteOne(query)
+            res.send(singlCart);
+        })
+
+
+        // email api
+        app.get('/carts/:email', async (req, res) => {
+
+            const result = await OrderCollection.find({ email: req.params.email }).toArray();
+            // console.log({email:req.params.email});
+            res.send(result);
+        })
+
+
+
 
 
         // Post API / add service to server
@@ -46,7 +86,7 @@ async function run() {
         app.get('/services', async (req, res) => {
             const cursor = servicesCollection.find({});
             const services = await cursor.toArray();
-            res.send(services);
+            res.json(services);
         })
 
         //Get sigle Service by id
@@ -55,9 +95,17 @@ async function run() {
             const id = req.params.id;
             console.log('getting speic service', id);
             const query = { _id: ObjectId(id) };
+
+            // const options = {
+            //     // projection: { _id: 0 },
+            //     projection: { _id: 0 },
+            // };
+
             const service = await servicesCollection.findOne(query);
-            res.json(service);
+            res.send(service);
         })
+
+
 
 
 
